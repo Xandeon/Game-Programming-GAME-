@@ -2,8 +2,8 @@
 Benjamin Waters and Samuel Adetunji are creating a simple game demo for their game design class
 
 Developers:
-    -Benjamin Waters
-    -Samuel Adetunji 
+    -Benjamin Waters -- xandeonflux@gmail.com
+    -Samuel Adetunji -- 
 
 Game Idea Description:
 
