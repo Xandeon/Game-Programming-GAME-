@@ -3,7 +3,7 @@ Benjamin Waters and Samuel Adetunji are creating a simple game demo for their ga
 
 Developers:
     -Benjamin Waters -- xandeonflux@gmail.com
-    -Samuel Adetunji -- 
+    -Samuel Adetunji -- guysnacho2@gmail.com
 
 Game Idea Description:
 
