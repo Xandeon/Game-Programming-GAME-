@@ -4,11 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Ben Waters
-/*
- * Created by following a tutorial to learn, will not be in final game in full      
- * URL: https://www.youtube.com/watch?v=Z4HA8zJhGEk
- */
-
+//Good car Controller
 
 public class BetterCarController : MonoBehaviour
 {
@@ -22,6 +18,16 @@ public class BetterCarController : MonoBehaviour
     private float horizInput; //A/D input
     private float vertInput;  //W/S input
     private bool isBraking;  //spacebar input
+    private bool isShooting; //W only input
+
+    private bool isReset; // R key
+
+    //Gun Variables ----------------------------------------------------------------------------------
+    [SerializeField] float maxBarrelSpeed;
+    [SerializeField] float barrelAcceleration;
+    private float barrelSpeed;
+    [SerializeField] ParticleSystem leftMuzzleFlash;
+    [SerializeField] ParticleSystem rightMuzzleFlash; 
 
     //Wheel Collider Variables -----------------------------------------------------------------------
     //  -made serializable so they can be dragged and dropped in the editor
@@ -33,8 +39,7 @@ public class BetterCarController : MonoBehaviour
 
     //Motor Force Variables --------------------------------------------------------------------------
 
-    //  - Defines torque on wheels
-    //  - in a later version our game will apply force to the back of the car instead of using a motor
+    //  - Defines torque on wheels for reversing
     [SerializeField] private float motorForce;
 
     //brake variables
@@ -51,13 +56,18 @@ public class BetterCarController : MonoBehaviour
     [SerializeField] private Transform backLeftWheelTransform;
     [SerializeField] private Transform backRightWheelTransform;
 
+    [SerializeField] private Transform RightGunBarrel;
+    [SerializeField] private Transform LeftGunBarrel;
+
     //using fixed update since its a physics car
     private void FixedUpdate()
     {
         getInput();
+        handleReset();
         handleMotor();
         handleTurning();
         updateWheels();
+        updateBarrels(RightGunBarrel,LeftGunBarrel);
     }
 
     //this function gets user controls
@@ -66,7 +76,21 @@ public class BetterCarController : MonoBehaviour
         horizInput = Input.GetAxis(HORIZ);
         vertInput = Input.GetAxis(VERT);
         isBraking = Input.GetKey(KeyCode.Space);
+        isShooting = Input.GetKey(KeyCode.W);
+        isReset = Input.GetKey(KeyCode.R);
     }
+
+    //makes it so if you flip the car the car can be reset without restarting the games
+    void handleReset()
+    {
+        if (isReset)
+        {
+            barrelSpeed = 0;
+            this.transform.rotation = Quaternion.identity;
+            isReset = !isReset;
+        }
+    }
+
 
     //controls motor of the car (may not be neccesary for a game / at least for turning wheels)
     // it will still need a driving force 
@@ -82,12 +106,13 @@ public class BetterCarController : MonoBehaviour
         
     }
 
+
     //helper function for motor control function to apply breaks to all 4 wheels
     private void applyBrakes()
     {
         //disabled for drifting
-        //frontLeftWheelCollider.brakeTorque = currentBrakeForce;
-        //frontRightWheelCollider.brakeTorque = currentBrakeForce;
+        frontLeftWheelCollider.brakeTorque = currentBrakeForce;
+        frontRightWheelCollider.brakeTorque = currentBrakeForce;
         backLeftWheelCollider.brakeTorque = currentBrakeForce;
         backRightWheelCollider.brakeTorque = currentBrakeForce;
 
@@ -121,4 +146,49 @@ public class BetterCarController : MonoBehaviour
         wheelTransform.position = position;
 
     }
+
+    //Spin the barrel meshes if the car is moving forward
+    //Entirely Cosmetic
+    private void updateBarrels(Transform leftBarrel, Transform rightBarrel)
+    {
+
+        //Handle the rotation speed for visual effect
+        if (isShooting)
+        {
+            //Speed Up barrel
+            if (barrelSpeed <= maxBarrelSpeed){
+                barrelSpeed += barrelAcceleration;
+            }
+
+            //Turn on Muzzle Flash if barrel is spun up enough
+            if (!rightMuzzleFlash.isPlaying && barrelSpeed >= maxBarrelSpeed/4)
+            {
+                rightMuzzleFlash.Play();
+                leftMuzzleFlash.Play();
+            }
+
+        }
+        else
+        {
+            //Slow Down Barrel
+            if (barrelSpeed >= 0){
+                barrelSpeed -= barrelAcceleration;
+            }
+
+            //Turn off Muzzle Flash
+            if (rightMuzzleFlash.isPlaying)
+            {
+                rightMuzzleFlash.Stop();
+                leftMuzzleFlash.Stop();
+            }
+
+        }
+        
+      
+        //rotate the barrel
+        leftBarrel.Rotate(0, 0, Time.deltaTime * barrelSpeed, Space.Self);
+        rightBarrel.Rotate(0, 0, Time.deltaTime * -barrelSpeed, Space.Self);
+        
+    }
+
 }
