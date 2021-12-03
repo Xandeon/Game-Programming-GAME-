@@ -30,6 +30,7 @@ public class FollowCamera : MonoBehaviour
     }
 
 
+
     private void handleTranslation()
     {
         //figures out the line to translate on and linearly interpolates over time

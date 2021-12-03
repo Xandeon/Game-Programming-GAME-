@@ -6,6 +6,17 @@ using UnityEngine;
 //Ben Waters
 //Good car Controller
 
+    //Changes
+
+    /*
+     * 2/12/2021:   -Added Guns to car
+     *              -Script now handles gun animatins and particles
+     *              
+     *             
+     */
+
+
+
 public class BetterCarController : MonoBehaviour
 {
 
@@ -111,8 +122,8 @@ public class BetterCarController : MonoBehaviour
     private void applyBrakes()
     {
         //disabled for drifting
-        frontLeftWheelCollider.brakeTorque = currentBrakeForce;
-        frontRightWheelCollider.brakeTorque = currentBrakeForce;
+        //frontLeftWheelCollider.brakeTorque = currentBrakeForce;
+        //frontRightWheelCollider.brakeTorque = currentBrakeForce;
         backLeftWheelCollider.brakeTorque = currentBrakeForce;
         backRightWheelCollider.brakeTorque = currentBrakeForce;
 
