@@ -1,3 +1,4 @@
+// author - Samuel Adetunji
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Game Over");
             banner.text = "Level Complete!\nMushrooms Exterminated";
-            EndGame();
+            CompleteLevel();
         } else
         {
             banner.text = "Enemies Left - " + parentEnemy.transform.childCount.ToString();
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("You Win!!");
         completeLevelUI.SetActive(true);
+        EndGame();
     }
 
     public void EndGame () {
